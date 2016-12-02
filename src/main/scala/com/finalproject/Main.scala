@@ -1,15 +1,24 @@
 package com.finalproject
 
-import java.util.function.Consumer
-
-import Utils._
 import twitter4j._
-import com.finalproject.tweeter.TweeterFactory
+import com.finalproject.tweeter.Tweeter
+import scala.collection.JavaConversions._
 
 // Twitter Hello
 object Main extends App {
+
+
 /*
-    val twitterStream = TweeterFactory.Stream
+    println("Having a drink from the fire hose...")
+    val twitterStream = Tweeter.Stream
+    twitterStream.addListener(
+        new RawStreamListener {
+            override def onMessage(rawString: String): Unit = println(s"tweet: $rawString")
+            override def onException(ex: Exception): Unit = ex.printStackTrace()
+        }
+    )
+    twitterStream.sample()
+
 
     twitterStream.addListener(
         new StatusListener {
@@ -27,17 +36,20 @@ object Main extends App {
         }
     )
     twitterStream.firehose(0)
-*/2
+
+    ++++++++++++++++++++++++++++++
+*/
+    val twitter = Tweeter.Tweeter
+
     try {
-        val twitter = TweeterFactory.Tweeter
         val locations = twitter.getAvailableTrends
-        val iterator = locations.iterator()
         println("Showing available trends")
-        while (iterator.hasNext){
-            val loc = iterator.next
+        locations.foreach(loc => {
             println(s"${loc.getName} + (woeid: ${loc.getWoeid})")
-        }
+        })
         println("Done")
+        val iterator = locations.iterator()
+
     } catch {
         case te: TwitterException =>
             te.printStackTrace()
@@ -46,4 +58,11 @@ object Main extends App {
             println("Honestly I dont know")
     }
 
+    val rateLimitStatus = twitter.getRateLimitStatus
+    val bla = rateLimitStatus.keySet().foreach(key => {
+        val status = rateLimitStatus.get(key)
+        println(s" Endpoint: $key")
+        println(s"    limit: ${status.getLimit}")
+        println(s"Remaining: ${status.getRemaining}")
+    })
 }

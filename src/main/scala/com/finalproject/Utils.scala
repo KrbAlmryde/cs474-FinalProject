@@ -12,22 +12,10 @@ import scala.sys.process._
   */
 package object Utils {
 
-    /**
-      * Relevant twitter authetification information.
-      * Please dont steal it.
-      */
-    val consumerKey = "5B73c5z6nLwGtWWTIqdieTAPC"
-    val consumerSecret = "LMyBlcTmSdz7iTbcug3A7R5KVQxaCK7PeO2HrkQbFUCriz6Amp"
-    val accessToken = "326827611-Ds6Kas4XDgN40FjJvMfHtdIV7tlRrsVPYdzRtfzW"
-    val accessTokenSecret = "El9NWfPj2OknPSZRZALMnmhqwDKpemkyfyzf9WSeUgO3Q"
+    // This is the United States YAHOO! Where On Earth Id
+    // Used for obtaining trending tweets or hashtags
+    val USWOEID = 23424977
 
-    val config:Configuration =
-        new ConfigurationBuilder()
-                .setOAuthConsumerKey(consumerKey)
-                .setOAuthConsumerSecret(consumerSecret)
-                .setOAuthAccessToken(accessToken)
-                .setOAuthAccessTokenSecret(accessTokenSecret)
-                .build()
     /**
       * Convenience function which gives me the current working directory
       * @return String
