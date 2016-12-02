@@ -8,7 +8,6 @@ import scala.collection.JavaConversions._
 object Main extends App {
 
 
-/*
     println("Having a drink from the fire hose...")
     val twitterStream = Tweeter.Stream
     twitterStream.addListener(
@@ -20,6 +19,7 @@ object Main extends App {
     twitterStream.sample()
 
 
+/*
     twitterStream.addListener(
         new StatusListener {
             override def onStatus(status: Status): Unit = println(s"@${status.getUser.getScreenName}-${status.getText}")
@@ -38,17 +38,15 @@ object Main extends App {
     twitterStream.firehose(0)
 
     ++++++++++++++++++++++++++++++
-*/
     val twitter = Tweeter.Tweeter
 
     try {
         val locations = twitter.getAvailableTrends
         println("Showing available trends")
         locations.foreach(loc => {
-            println(s"${loc.getName} + (woeid: ${loc.getWoeid})")
+            println(s"\t${loc.getName} + (woeid: ${loc.getWoeid})")
         })
         println("Done")
-        val iterator = locations.iterator()
 
     } catch {
         case te: TwitterException =>
@@ -65,4 +63,5 @@ object Main extends App {
         println(s"    limit: ${status.getLimit}")
         println(s"Remaining: ${status.getRemaining}")
     })
+*/
 }
