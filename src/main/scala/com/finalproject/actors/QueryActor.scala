@@ -1,9 +1,9 @@
 package com.finalproject.actors
 
 import akka.actor.Actor
-import com.finalproject.patterns.Messages.Empty
+import com.finalproject.patterns.Messages.{Empty, Query, ShutDown}
 import com.finalproject.tweeter.{Tweeter, TweeterStatusListener}
-import twitter4j.{StallWarning, Status, StatusDeletionNotice, StatusListener}
+import twitter4j._
 
 import scala.collection.JavaConversions._
 
@@ -17,8 +17,17 @@ class QueryActor extends Actor {
 
     def receive: Receive  = {
         case Empty =>
-            println(s"${Console.YELLOW}Having a drink from the fire hose...${Console.BOLD}")
+            println(s"${Console.YELLOW}Having a drink from the garden hose...${Console.BOLD}")
             twitterStream.sample("en")
 
+        case Query(pattern) =>
+            twitterStream.filter(
+                new FilterQuery().track(pattern)
+            )
+
+        case ShutDown =>
+            twitterStream.clearListeners()
+            twitterStream.cleanUp()
+            twitterStream.shutdown()
     }
 }

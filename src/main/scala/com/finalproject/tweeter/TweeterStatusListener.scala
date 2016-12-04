@@ -1,5 +1,6 @@
 package com.finalproject.tweeter
 
+import akka.actor.ActorContext
 import twitter4j.{StatusListener, _}
 
 /**
@@ -9,25 +10,22 @@ class TweeterStatusListener extends StatusListener {
 
     def onStatus(status: Status): Unit = {
 
-        println(s"@${status.getUser.getScreenName}-${status.getText}")
+        println(s"@${status.getUser.getScreenName}: ${if(status.isRetweet) status.getRetweetedStatus.getText else status.getText}")
+//            s"""
+//               | @${status.getUser.getScreenName}: ${if(status.isRetweet) status.getRetweetedStatus.getText else status.getText}
+//               |\t     Name: ${status.getUser.getName}
+//               |\t       Id: ${status.getUser.getId}
+//               |\t Location: ${status.getUser.getLocation}
+//               |\tFollowers: ${status.getUser.getFollowersCount}
+//               |\tUtcOffset: ${status.getUser.getUtcOffset}
+//               |\t TimeZone: ${status.getUser.getTimeZone}
+//               |\tCreatedAt: ${status.getUser.getCreatedAt}
+//               |\t Language: ${status.getUser.getLang}
+//               |\tCreatedAt: ${status.getCreatedAt}
+//               |\t  Lat/Lng: ${status.getGeoLocation}
+//               |\t    Place: ${status.getPlace}
+//             """.stripMargin
 
-        println(
-            s"""
-               |@${status.getUser.getScreenName}
-               |\t${status.getUser.getName}
-               |\t${status.getUser.getId}
-               |\t${status.getUser.getLocation}
-               |\t${status.getUser.getFollowersCount}
-               |\t${status.getUser.getUtcOffset}
-               |\t${status.getUser.getTimeZone}
-               |\t${status.getUser.getCreatedAt}
-               |\t${status.getUser.getLang}
-               |\t${status.getCreatedAt}
-               |\t${status.getGeoLocation}
-               |\t${status.getPlace}
-               |\t${status.getText}\n
-             """.stripMargin
-        )
     }
 
     def onDeletionNotice(statusDeletionNotice: StatusDeletionNotice): Unit = println(s"Got a status deletion notice id: $statusDeletionNotice")

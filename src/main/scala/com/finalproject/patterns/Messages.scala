@@ -7,7 +7,8 @@ import scala.collection.JavaConversions._
 object Messages {
     case object Locations
     case object Empty
+    case object ShutDown
 
     case class Trends(woeid:String) // The woeid could be a number OR it could be a String
-    case class Search(query:String)
+    case class Query(query:String)
 }

@@ -1,7 +1,7 @@
 package com.finalproject.actors
 
 import akka.actor.{Actor, ActorRef, Props}
-import com.finalproject.patterns.Messages.{Empty, Locations, Search, Trends}
+import com.finalproject.patterns.Messages.{ShutDown, _}
 import org.json4s.DefaultFormats
 import twitter4j.FilterQuery
 
@@ -19,19 +19,30 @@ class MasterActor extends Actor{
         "query" -> context.actorOf(Props[QueryActor], name="search")
     )
 
+    val TrendsPattern = """(t$|trends)(\s+[0-9]+)""".r
+
+
     def receive: Receive  = {
 
+        case pattern:String =>
+            pattern match {
+                case TrendsPattern(_, woeid) =>
+                    println("Show me trends")
+                    actors("trends") ! Trends(woeid)
+
+                case _ => // User is requesting a pattern
+                    println(s"Got a request to search for stuff: ${pattern}")
+                    actors("query") ! Query(pattern)
+            }
         case Locations => // The user wants a list of all available locations
+            println("Show me locations")
             actors("trends") ! Locations
 
-        case trendID:Trends => // The user is requesting a specific list of trending locations
-            actors("trends") ! trendID
-
-        case query:Search => // User is requesting a pattern
-
-            actors("query") ! query
-
         case Empty =>
+            println("I want it ALL")
             actors("query") ! Empty
+
+        case ShutDown =>
+            actors("query") ! ShutDown
     }
 }
