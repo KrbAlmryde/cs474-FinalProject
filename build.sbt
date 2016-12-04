@@ -10,6 +10,8 @@ lazy val root = (project in file("."))
             logBuffered in Test := false,
 
             libraryDependencies ++= Seq(
+                "edu.stanford.nlp" % "stanford-corenlp" % "3.5.2" artifacts (Artifact("stanford-corenlp", "models"), Artifact("stanford-corenlp")),
+
                 "org.json4s" %% "json4s-native" % "3.3.0",                                  // For Json parsing
 
                 "com.typesafe.akka" %% "akka-actor" % "2.4.11",                             // Akka actores

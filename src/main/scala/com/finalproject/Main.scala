@@ -9,7 +9,7 @@ import akka.actor.{ActorSystem, Props}
 import akka.stream.ActorMaterializer
 import com.finalproject.patterns.Messages.{Empty, Locations, ShutDown}
 
-import scala.collection.JavaConversions._
+
 
 
 // Twitter Hello
