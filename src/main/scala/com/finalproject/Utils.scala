@@ -1,6 +1,7 @@
 package com.finalproject
 
 import java.io.File
+import scala.collection.JavaConversions._
 
 /**
   * Created by krbalmryde on 12/1/16.
@@ -17,14 +18,18 @@ package object Utils {
            |${Console.YELLOW}
            |** Its Twitter Time! **
            |${Console.WHITE}
+           | At the prompt '>: ' enter a space separated list of words and/or hashtags from which to query
+           |
+           | Not sure what to search for? Type 'trends 23424977' to see the top trending terms in the USA
            |
            |Available commands include:
            |${Console.GREEN}
-           |     t | trends ${Console.WHITE}=> Display the currently trending tweets RIGHT NOW${Console.GREEN}
-           |     q | query ${Console.WHITE}=> Enter a space separated list of terms to search the twitter-verse${Console.GREEN}
+           |     t | trends [string|id] ${Console.WHITE}=> Display a list of all places with available trends
+           |                                               If an optional argument is provided, users are presented
+           |                                               with the currently trending tweets RIGHT NOW, defaults to USA${Console.GREEN}
            |     h | help ${Console.WHITE}=> Display this help message again${Console.GREEN}
            |${Console.YELLOW}
-           |λ ---------------------------------------------- λ
+           |** ---------------------------------------------- **
            |
         """.stripMargin
 

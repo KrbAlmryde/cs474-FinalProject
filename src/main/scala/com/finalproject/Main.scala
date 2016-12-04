@@ -1,91 +1,66 @@
 package com.finalproject
 
 import twitter4j._
-import com.finalproject.tweeter.Tweeter
+import com.finalproject.actors._
+import com.finalproject.Utils.instructions
+
+import scala.io.StdIn
+import akka.actor.{ActorSystem, Props}
+import akka.stream.ActorMaterializer
+import com.finalproject.patterns.Messages.{Empty, Locations, Search}
+import com.finalproject.tweeter.{Tweeter, TweeterStatusListener}
+
 import scala.collection.JavaConversions._
 
+
 // Twitter Hello
-object Main extends App {
+object Main {
+
+    def main(args: Array[String]): Unit = {
+
+        implicit val system = ActorSystem("FinalProject")
+        implicit val materializer = ActorMaterializer()
+        import system.dispatcher
+
+        val masterActor = system.actorOf(Props[MasterActor], name = "master")
 
 
-    val twitter = Tweeter.Tweeter
-    val twitterStream = Tweeter.Stream
+        // RawStream is Good, but we can do better I think...
+        //    twitterStream.addListener(
+        //        new RawStreamListener {
+        //            override def onMessage(rawString: String): Unit = println(s"tweet: $rawString")
+        //            override def onException(ex: Exception): Unit = ex.printStackTrace()
+        //        }
+        //    )
+        //    twitterStream.sample()
+//        val Trends = """(t|trend[s]*)$""".r
+//        val TrendID = """(t$|trends)(\s+[0-9]+|)""".r
 
-/*
-    try {
-        val locations = twitter.getAvailableTrends
-        println("Showing available trends")
-        locations.foreach(loc => {
-            println(s"\t${loc.getName} + (woeid: ${loc.getWoeid})")
-        })
-        println("Done")
+        println(instructions)
+        while (true) {
+            StdIn.readLine(s">: ") match {
+                case "q" | "quit" =>
+                    println(s"Thanks for playing!")
+                    return
 
-    } catch {
-        case te: TwitterException =>
-            te.printStackTrace()
-            println("Failed to get trends")
-        case _:Throwable =>
-            println("Honestly I dont know")
-    }
+                case "h" | "help" =>
+                    println(instructions)
 
-    val rateLimitStatus = twitter.getRateLimitStatus
-    val bla = rateLimitStatus.keySet().foreach(key => {
-        val status = rateLimitStatus.get(key)
-        println(s" Endpoint: $key")
-        println(s"    limit: ${status.getLimit}")
-        println(s"Remaining: ${status.getRemaining}")
-    })
-*/
+                case "t" | "trends" =>
+                    masterActor ! Locations // User is requestion a list of all Possible trending locations
 
+                case input: String =>
+                    println("Down the rabbit hole we go!")
+                    masterActor ! Search(input)
 
-    println("Having a drink from the fire hose...")
-// RawStream is Good, but we can do better I think...
-//    twitterStream.addListener(
-//        new RawStreamListener {
-//            override def onMessage(rawString: String): Unit = println(s"tweet: $rawString")
-//            override def onException(ex: Exception): Unit = ex.printStackTrace()
-//        }
-//    )
-//    twitterStream.sample()
-
-
-
-    twitterStream.addListener(
-        new StatusListener {
-            override def onStatus(status: Status): Unit = {
-                println(s"@${status.getUser.getScreenName}-${status.getText}")
-                val u = status.getUser
-               val out =  "@" + u.getScreenName + "\t" +
-                        u.getName + "\t" +
-                        u.getId + "\t" +
-                        u.getLocation + "\t" +
-                        u.getFollowersCount + "\t" +
-                        u.getUtcOffset + "\t" +
-                        u.getTimeZone + "\t" +
-                        u.getCreatedAt + "\t" +
-                        u.getLang + "\n" +
-                        status.getCreatedAt + "\t" +
-                        status.getGeoLocation + "\t" +
-                        status.getPlace + "\n" +
-                        status.getText
-
-                println(out)
+                case _ =>
+                    // If they simply hit enter, we treat it like they want EVERYTHING
+                    masterActor ! Empty
             }
-
-            override def onDeletionNotice(statusDeletionNotice: StatusDeletionNotice): Unit = println(s"Got a status deletion notice id: $statusDeletionNotice")
-
-            override def onStallWarning(warning: StallWarning): Unit = println(s"Go stall warning: $warning")
-
-            override def onScrubGeo(userId: Long, upToStatusId: Long): Unit = println(s"Got scrub_geo event userID: $userId upToStatusId: $upToStatusId")
-
-            override def onTrackLimitationNotice(numberOfLimitedStatuses: Int): Unit = println(s"Got track limitation notice: $numberOfLimitedStatuses")
-
-            override def onException(ex: Exception): Unit = ex.printStackTrace()
         }
-    )
 
-    twitterStream.firehose(0)
 
+    }
 }
 
 
