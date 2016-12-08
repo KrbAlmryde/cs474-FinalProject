@@ -34,9 +34,9 @@ class MasterActor extends Actor{
                     println(s"Got a request to search for stuff: ${pattern}")
                     actors("query") ! Query(pattern)
             }
-        case Locations => // The user wants a list of all available locations
+        case Locations(temp) => // The user wants a list of all available locations
             println("Show me locations")
-            actors("trends") ! Locations
+            actors("trends") ! Locations(temp)
 
         case Empty =>
             println("I want it ALL")

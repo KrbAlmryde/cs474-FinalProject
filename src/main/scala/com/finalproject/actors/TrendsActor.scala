@@ -24,13 +24,15 @@ class TrendsActor extends Actor {
     def receive: Receive = {
 
         // Request for all locations
-        case Locations => {
+        case Locations(temp) => {
 
             try {
                 val locations = twitter.getAvailableTrends
                 println("Showing available Locations with trends")
+                temp.clear()
                 locations.foreach(loc => {
-                    println(s"\t${loc.getName} + (woeid: ${loc.getWoeid})")
+                    //println(s"\t${loc.getName} + (woeid: ${loc.getWoeid})")
+                    temp.addElement(loc.getName)
                 })
                 println("Done")
 
