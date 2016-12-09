@@ -23,6 +23,8 @@ public static void main(String args[]) throws IOException
 		String tweet;
 	
 		  ArrayList<String> stopwords= new ArrayList<String>();
+			
+		//Reading Stopwords and adding them to a List	
 		  BufferedReader stop = new BufferedReader(new FileReader("Data\\stopwords.txt"));
 		  String line = "";
 		  while ((line = stop.readLine()) != null)
@@ -30,7 +32,7 @@ public static void main(String args[]) throws IOException
 			  stopwords.add(line);
 		  }
 		
-		
+		//code to create a hashmap of words and their scores present in AFINN dictionary
 		 Map<String, String> map = new HashMap<String, String>();
 	        BufferedReader in = new BufferedReader(new FileReader("Data\\AFINN"));
 	        
@@ -41,11 +43,10 @@ public static void main(String args[]) throws IOException
 	            count++;
 	        }
 	        in.close();
-	     //   System.out.println(map.toString());
-	   
+	    
 		
-		
-		Scanner inputStream= new Scanner(new FileReader("C:\\Users\\ATripathi\\Desktop\\New folder\\Sentiment Analysis\\Data\\TestTweets.csv"));
+		//Reading the tweets from a CSV file
+		Scanner inputStream= new Scanner(new FileReader("Data\\TestTweets.csv"));
 		while(inputStream.hasNextLine())
 		{
 			float tweetscore=0;
@@ -55,17 +56,22 @@ public static void main(String args[]) throws IOException
 		
 
 			for(int i=0; i<word.length;i++)
-			{
+			{	
+				//Checking if the word is present in Stopwords; if present, ignoring that word
 				if(stopwords.contains(word[i].toLowerCase()))
 				{
 					
 				}
 				else{
+				
+				//Checking if the selected word is present in AFINN dictionary or not
 				if(map.get(word[i])!=null)
 				{
 				String wordscore= map.get(word[i].toLowerCase());
 				tweetscore=(float) tweetscore + Integer.parseInt(wordscore);
 			}}}
+
+			//Storing the tweets with their overall tweet score
 			Map<String, Float> sentiment= new HashMap<String, Float>();
 			sentiment.put(tweet, tweetscore);
 			System.out.println(sentiment.toString()); 
