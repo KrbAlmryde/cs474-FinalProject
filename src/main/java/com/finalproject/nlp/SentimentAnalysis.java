@@ -9,8 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class SentimentAnalysis {
 
+// Deprecated, dont use me
+public class SentimentAnalysis {
 
     public static void main(String args[]) throws IOException {
         try {

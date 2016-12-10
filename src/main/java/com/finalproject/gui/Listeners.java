@@ -1,4 +1,4 @@
-package com.finalproject;
+package com.finalproject.gui;
 
 import akka.pattern.Patterns;
 import akka.util.Timeout;

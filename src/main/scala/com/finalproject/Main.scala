@@ -3,6 +3,7 @@ package com.finalproject
 import twitter4j._
 import com.finalproject.actors._
 import com.finalproject.Utils.instructions
+import com.finalproject.nlp.SentimentAnalyzer
 
 import scala.io.StdIn
 import akka.actor.{ActorSystem, Props}
@@ -19,9 +20,9 @@ object Main extends App {
 
     implicit val system = ActorSystem("FinalProject")
     implicit val materializer = ActorMaterializer()
+    SentimentAnalyzer(instructions)//
 
     val masterActor = system.actorOf(Props[MasterActor], name = "master")
-
     println(instructions)
     while (true) {
         StdIn.readLine(s">: ") match {

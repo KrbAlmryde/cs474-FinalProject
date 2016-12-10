@@ -1,16 +1,11 @@
-package com.finalproject;
+package com.finalproject.gui;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import akka.util.Timeout;
-import akka.pattern.Patterns;
-import com.finalproject.actors.*;
-//import com.finalproject.Utils.instructions;
+
 import akka.actor.*;
-import com.finalproject.patterns.Messages.*;
-import scala.concurrent.Await;
-import scala.concurrent.Future;
+
+import com.finalproject.actors.*;
 
 
 public class pop_up_gui

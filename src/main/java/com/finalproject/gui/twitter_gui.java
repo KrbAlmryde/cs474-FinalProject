@@ -1,16 +1,18 @@
-package com.finalproject;
+package com.finalproject.gui;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import akka.util.Timeout;
-import akka.pattern.Patterns;
-import com.finalproject.actors.*;
-//import com.finalproject.Utils.instructions;
-import akka.actor.*;
-import com.finalproject.patterns.Messages.*;
+
 import scala.concurrent.Await;
 import scala.concurrent.Future;
+
+import akka.actor.*;
+import akka.util.Timeout;
+import akka.pattern.Patterns;
+
+import com.finalproject.actors.*;
+import com.finalproject.patterns.Messages;
 
 
 public class twitter_gui extends JFrame //implements ActionListener,FocusListener
@@ -142,51 +144,30 @@ public class twitter_gui extends JFrame //implements ActionListener,FocusListene
     } // end class constructor
 
 
-
-    // the main function of the program
-    public static void main(String args[])
-    {
-        frame.setSize(1125,600);
-        frame.setLayout(new BorderLayout());
-
-        //create and start the gui
-        app = new twitter_gui(frame);
-        app.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        frame.setVisible(true);
-
-    }// end of main
-
-
-
     //
     // handles mouse click events
     //
-    class MouseHandler extends MouseAdapter
-    {
+    class MouseHandler extends MouseAdapter {
 
-        public void mouseClicked (MouseEvent e)
-        {
+        public void mouseClicked (MouseEvent e) {
             String s = "";
             JButton temp = (JButton)e.getSource();
 
-            if(temp == analyze)
-            {
+            if(temp == analyze) {
                 app2 = new pop_up_gui(new JFrame("Keyword Search"), searchTerms.getText());
-            }
-            else if(temp == trends)
-            {
+
+            } else if(temp == trends) {
                 Timeout timeout = new Timeout(
                         scala.concurrent.duration.Duration.create(1,"seconds"));
 
                 Future<Object> f1 = Patterns.ask(masterActor,
-                                            new Locations(locations_list),timeout);
+                        new Messages.Locations(locations_list),timeout);
 
                 try {
                     String result = (String) Await.result(f1,timeout.duration());
                     //System.out.println("RESULT = " + result);
-                }
-                catch (Exception e1)
-                {
+
+                } catch (Exception e1) {
                     System.out.println("Error Caught. Moving On.......");
                 }
 
@@ -196,6 +177,17 @@ public class twitter_gui extends JFrame //implements ActionListener,FocusListene
 
     }
 
+    // the main function of the program
+    public static void main(String args[]) {
+        frame.setSize(1125,600);
+        frame.setLayout(new BorderLayout());
+
+        //create and start the gui
+        app = new twitter_gui(frame);
+        app.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        frame.setVisible(true);
+
+    }// end of main
 
 
 }
