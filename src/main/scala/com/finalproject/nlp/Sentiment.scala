@@ -4,14 +4,13 @@ package com.finalproject.nlp
   * Created by krbalmryde on 12/10/16.
   */
 
-sealed trait Emotion
+sealed trait Sentiment
 
-object Sentiment {
-    case object UNKNOWN extends Emotion
-    case object VERY_NEGATIVE extends Emotion
-    case object NEGATIVE extends Emotion
-    case object NEUTRAL extends Emotion
-    case object POSITIVE extends Emotion
-    case object VERY_POSITIVE extends Emotion
-
+object Emotion {
+    case object UNKNOWN extends Sentiment
+    case object VERY_NEGATIVE extends Sentiment
+    case object NEGATIVE extends Sentiment
+    case object NEUTRAL extends Sentiment
+    case object POSITIVE extends Sentiment
+    case object VERY_POSITIVE extends Sentiment
 }

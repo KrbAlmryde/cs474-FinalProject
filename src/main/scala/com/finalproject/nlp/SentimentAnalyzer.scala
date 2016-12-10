@@ -1,6 +1,6 @@
 package com.finalproject.nlp
 
-import Sentiment._
+import Emotion._
 
 import java.util.Properties
 
@@ -29,28 +29,30 @@ object SentimentAnalyzer {
         new StanfordCoreNLP(props)
     }
 
-    def apply(tweet:String):(Emotion, Double) = {
+    def apply(tweet:String):(Sentiment, Double) = {
         val annotations = pipeline.process(tweet)
         val sentences = annotations.get(classOf[CoreAnnotations.SentencesAnnotation]).toVector
         val sentiment = sentences.map( sent=> sent.get(classOf[SentimentCoreAnnotations.SentimentAnnotatedTree])).map(tree => RNNCoreAnnotations.getPredictedClass(tree).toDouble)
         val sizes = sentences.map(_.toString.length)
 
+        // max Sentiment score
         val maxSentiment:Double = sentiment.max
+
+        // weighted Sentiment score
         val weightedSentiment:Double  = (sentiment, sizes).zipped.map((sent, sz) => sent * sz).sum / sizes.sum
+
+        // average Sentiment score
         val averageSentiment:Double = {
             if (sentiment.nonEmpty) sentiment.sum / sentiment.size
             else -1
         }
-
-        // Sentiment(maxSentiment),
-        // Sentiment(averageSentiment),
 
         // Return the result as a tuple
         (classify(weightedSentiment),weightedSentiment)
 
     }
 
-    def classify(score:Double): Emotion = {
+    def classify(score:Double): Sentiment = {
         score match {
             case s if s < -5.0 => UNKNOWN
             case s if s < -4.0 => VERY_NEGATIVE
