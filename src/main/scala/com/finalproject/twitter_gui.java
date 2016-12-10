@@ -13,16 +13,27 @@ import scala.concurrent.Await;
 import scala.concurrent.Future;
 
 
-public class twitter_gui extends JFrame implements ActionListener
+public class twitter_gui extends JFrame //implements ActionListener,FocusListener
 {
+    // akka Actor stuff
     final ActorSystem system = ActorSystem.create("FinalProject");
     final ActorRef masterActor = system.actorOf(Props.create(MasterActor.class));
-    //final ActorMaterializer materializer = ActorMaterializer.create();
+
+    //Gui variables
     static twitter_gui app;
+    static pop_up_gui app2;
+
+    //listener variables
+    private Listeners listener;
+    private Listeners.buttonListener buttonListener;
+    private Listeners.focusListener focusListener;
+    private Listeners.selectionListener selectionListener;
+
+    // Gui Items
     static JFrame frame = new JFrame("CS474 Project");
     private JLabel projectLabel = new JLabel("Twitter Analyzer");
-    private JLabel trendsLabel = new JLabel("Today's Twitter Trends:");
-    private JLabel resultsLabel = new JLabel("Your Search Results:");
+    private JLabel trendsLabel = new JLabel("Trend Locations:");
+    private JLabel resultsLabel = new JLabel("What's trending in ");
     JMenuBar menuBar = new JMenuBar();
     JMenu menu = new JMenu("Menu");
     JMenu menuHelp = new JMenu("Help");
@@ -33,8 +44,8 @@ public class twitter_gui extends JFrame implements ActionListener
     //panels and what they'll contain for the EAST and WEST portions of the main window(frame)
     private JPanel topicsPanel = new JPanel(new BorderLayout());
     private JPanel resultsPanel = new JPanel(new BorderLayout());
-    private DefaultListModel<String> topics_list = new DefaultListModel<>(); // list of tweets
-    private JList<String> list = new JList<String>(topics_list);
+    private DefaultListModel<String> locations_list = new DefaultListModel<>(); // list of tweets
+    private JList<String> list = new JList<String>(locations_list);
     private DefaultListModel<String> results_list = new DefaultListModel<>(); // list of tweets
     private JList<String> list2 = new JList<String>(results_list);
     JScrollPane topicsPane = new JScrollPane();
@@ -53,18 +64,22 @@ public class twitter_gui extends JFrame implements ActionListener
     public twitter_gui(JFrame frame)
     {
         super("Twitter Analyzer");
+        listener = new Listeners(exit,help,about,trends,analyze,searchTerms,list,resultsLabel);
+        buttonListener = new Listeners.buttonListener();
+        focusListener = new Listeners.focusListener();
+        selectionListener = new Listeners.selectionListener();
         menuBar.add(menu);
         menuBar.add(menuHelp);
-        exit.addActionListener(this);
-        help.addActionListener(this);
-        about.addActionListener(this);
+        exit.addActionListener(buttonListener);
+        help.addActionListener(buttonListener);
+        about.addActionListener(buttonListener);
         menu.add(exit);
         menuHelp.add(about);
         menuHelp.add(help);
         frame.setJMenuBar(menuBar);
 
         //main label on gui
-        projectLabel.setFont(new Font("Arial",Font.BOLD , 30));
+        projectLabel.setFont(new Font("Arial",Font.BOLD , 36));
         projectLabel.setHorizontalAlignment(JLabel.CENTER);
 
         //Labels for other panels
@@ -82,7 +97,7 @@ public class twitter_gui extends JFrame implements ActionListener
         trendPanel.add(Box.createRigidArea(new Dimension(30,50)));
         trendPanel.add(trends);
         trends.setHorizontalAlignment(JButton.CENTER);
-        trends.setText("<html>Today's<br/>Trends</html>");
+        trends.setText("<html>Get Trend<br/>Locations</html>");
         trends.addMouseListener( new MouseHandler() );
         trends.setFont(new Font("Arial",Font.BOLD ,20));
         trends.setMaximumSize(new Dimension(230,200));
@@ -94,10 +109,14 @@ public class twitter_gui extends JFrame implements ActionListener
         analyze.setPreferredSize(new Dimension(200,55));
         searchTerms.setPreferredSize(new Dimension(50,30));
         searchTerms.setFont(new Font("Arial",Font.BOLD,16));
+        searchTerms.addFocusListener(focusListener);
 
         //setup the Panels for the display lists
         topicsPane.setViewportView(list);
         resultsPane.setViewportView(list2);
+
+        //selection listener for locations list
+        list.addListSelectionListener(selectionListener);
 
         topicsPanel.add(trendsLabel,BorderLayout.NORTH);
         trendsLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -122,39 +141,6 @@ public class twitter_gui extends JFrame implements ActionListener
 
     } // end class constructor
 
-    //
-    // handles JMenuItem actions from the "Menu" and "Help" menus
-    //
-    public void actionPerformed (ActionEvent e)
-    {
-        Object item;
-        item = e.getSource(); // get menu item that triggered the event
-
-        // match the menu item to the its resulting action
-
-        if(item == exit)
-        {
-            System.exit(0);
-        }
-        else if(item == about)
-        {
-            displayAbout();
-        }
-        else if(item == help)
-        {
-            displayHelp();
-        }
-
-    }// end actionPerformed
-
-
-    class MyAdjustmentListener implements AdjustmentListener
-    {
-        public void adjustmentValueChanged(AdjustmentEvent e) {
-            //label.setText("    New Value is " + e.getValue() + "      ");
-            repaint();
-        }
-    }
 
 
     // the main function of the program
@@ -173,33 +159,6 @@ public class twitter_gui extends JFrame implements ActionListener
 
 
     //
-    // display the about page
-    //
-    public void displayAbout()
-    {
-        JOptionPane.showMessageDialog(null,"                                                       ABOUT Twitter Analyzer \n\n"
-                + "Created by:  Kyle Almryde, Abhishek Tripathi and Mike McClory.\n\n"
-                + "Created for CS474: Object Oriented Languages and Environments with Mark Grechanik   \n\n");
-
-
-
-    } // end of displayAbout
-
-
-
-    //
-    // display the help page
-    //
-    public void displayHelp()
-    {
-        JOptionPane.showMessageDialog (null, "               HELP CENTER\n\n ");
-
-
-
-    } // end of displayHelp
-
-
-    //
     // handles mouse click events
     //
     class MouseHandler extends MouseAdapter
@@ -210,16 +169,17 @@ public class twitter_gui extends JFrame implements ActionListener
             String s = "";
             JButton temp = (JButton)e.getSource();
 
-
             if(temp == analyze)
-                topics_list.addElement(searchTerms.getText());
-            else if(temp.getText().equals("<html>Today's<br/>Trends</html>"))
+            {
+                app2 = new pop_up_gui(new JFrame("Keyword Search"), searchTerms.getText());
+            }
+            else if(temp == trends)
             {
                 Timeout timeout = new Timeout(
                         scala.concurrent.duration.Duration.create(1,"seconds"));
 
                 Future<Object> f1 = Patterns.ask(masterActor,
-                                            new Locations(topics_list),timeout);
+                                            new Locations(locations_list),timeout);
 
                 try {
                     String result = (String) Await.result(f1,timeout.duration());
