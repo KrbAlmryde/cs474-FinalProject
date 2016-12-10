@@ -20,7 +20,7 @@ object Main extends App {
 
     implicit val system = ActorSystem("FinalProject")
     implicit val materializer = ActorMaterializer()
-    SentimentAnalyzer(instructions)//
+    SentimentAnalyzer(instructions)
 
     val masterActor = system.actorOf(Props[MasterActor], name = "master")
     println(instructions)

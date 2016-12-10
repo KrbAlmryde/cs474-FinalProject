@@ -13,7 +13,7 @@ import java.util.Scanner;
 // Deprecated, dont use me
 public class SentimentAnalysis {
 
-    public static void main(String args[]) throws IOException {
+    void sample(String args[]) throws IOException {
         try {
             int count = 0;
             String tweet;
@@ -48,15 +48,12 @@ public class SentimentAnalysis {
                 String[] word = tweet.split(" ");
 
 
-                for (int i = 0; i < word.length; i++) {
+                for (String aWord : word) {
                     //Checking if the word is present in Stopwords; if present, ignoring that word
-                    if (stopwords.contains(word[i].toLowerCase())) {
-
-                    } else {
-
+                    if (!stopwords.contains(aWord.toLowerCase())) {
                         //Checking if the selected word is present in AFINN dictionary or not
-                        if (map.get(word[i]) != null) {
-                            String wordscore = map.get(word[i].toLowerCase());
+                        if (map.get(aWord) != null) {
+                            String wordscore = map.get(aWord.toLowerCase());
                             tweetscore = (float) tweetscore + Integer.parseInt(wordscore);
                         }
                     }
@@ -66,8 +63,6 @@ public class SentimentAnalysis {
                 Map<String, Float> sentiment = new HashMap<String, Float>();
                 sentiment.put(tweet, tweetscore);
                 System.out.println(sentiment.toString());
-
-
             }
 
 
