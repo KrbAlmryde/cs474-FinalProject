@@ -11,7 +11,6 @@ import org.reactivestreams.Publisher
 class TweeterStatusListener(system: ActorSystem) extends StatusListener {
 
     def onStatus(status: Status): Unit = {
-        println("got a tweet")
         val user = status.getUser.getName
         val timeStamp = status.getCreatedAt.getTime
         val tweet = status.getText

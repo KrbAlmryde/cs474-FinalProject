@@ -35,10 +35,10 @@ class Application @Inject() (implicit system: ActorSystem, mat: Materializer, ec
     var actorRef:ActorRef = ActorRef.noSender
     val twitterStream = new TwitterStreamClient(system)
     SentimentAnalyzer("init") // do this once to initialize the annotator
+    openBrowser(new URI("http://localhost:9000/"))  // It works by george it works!
 
 
     def index:Action[AnyContent] = Action {
-        openBrowser(new URI("http://localhost:9000/"))  // It works by george it works!
         Ok(views.html.index(""))
     }
 
