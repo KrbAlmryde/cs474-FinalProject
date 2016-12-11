@@ -1,4 +1,6 @@
 package com.finalproject.patterns
+
+import com.finalproject.nlp.Sentiment
 import javax.swing.{DefaultListModel, JList}
 
 import scala.collection.JavaConversions._
@@ -13,4 +15,8 @@ object Messages {
 
     case class Trends(woeid:String) // The woeid could be a number OR it could be a String
     case class Query(query:String)
+
+    case class Tweet(author:String, timeStamp:Long, body:String)
+    case class SentiScore(emotion:Sentiment, score:Double)
+    case class EmoTweet(sentiment:SentiScore, tweet:Tweet)
 }

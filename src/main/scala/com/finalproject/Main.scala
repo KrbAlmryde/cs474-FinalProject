@@ -1,18 +1,19 @@
 package com.finalproject
 
-import twitter4j._
+import com.finalproject.Utils._
 import com.finalproject.actors._
-import com.finalproject.Utils.instructions
+import com.finalproject.patterns.Messages._
 import com.finalproject.nlp.SentimentAnalyzer
+import java.net.URI
+
+import akka.NotUsed
 
 import scala.io.StdIn
-import akka.actor.{ActorSystem, Props}
-import akka.stream.{ActorMaterializer, OverflowStrategy}
-import akka.stream.scaladsl.Source
-import com.finalproject.patterns.{JsonProtocol, Messages}
-import com.finalproject.patterns.Messages.{Empty, Locations, ShutDown}
-
-
+import akka.stream._
+import akka.actor.{ActorRef, ActorSystem, Props}
+import akka.stream.javadsl.Keep
+import akka.stream.scaladsl.{Broadcast, Flow, Sink, Source}
+import com.finalproject.tweeter.TwitterStreamClient
 
 
 // Twitter Hello
@@ -20,34 +21,44 @@ object Main extends App {
 
     implicit val system = ActorSystem("FinalProject")
     implicit val materializer = ActorMaterializer()
-    SentimentAnalyzer(instructions)
+    SentimentAnalyzer("init") // do this once to initialize the annotator
 
-    val masterActor = system.actorOf(Props[MasterActor], name = "master")
-    println(instructions)
-    while (true) {
-        StdIn.readLine(s">: ") match {
-            case "q" | "quit" =>
-                println(s"Thanks for playing!")
-                masterActor ! ShutDown
+    val twitterStream = new TwitterStreamClient(system)
+    twitterStream.listenAndStream("Happy Holidays")
 
-            case "h" | "help" =>
-                println(instructions)
+    /*
+        OOOOOHHHHH!!
+        Sources
+        Broacasts
+        Flows
+        Sinks
+        etc
 
-            case "t" | "trends" =>
-                masterActor ! Locations // User is requestion a list of all Possible trending locations
+        Are BLUEPRINTS. That is, they merely define the operations, they dont contain any data.
+        Just the instructions by which to operate on!
+     */
+    // There are our blueprints or Graph nodes. They define the steps by which we operate
+    val source: Source[Tweet, ActorRef] = Source.actorPublisher[Tweet](TweetActor.props)
 
-            case input: String =>
-                input match {
-                    // If they simply hit enter, we treat it like they want EVERYTHING
-                    case "" =>
-                        masterActor ! Empty
-                    case _ =>
-                        println("Down the rabbit hole we go!")
-                        masterActor ! input
-                }
+    // Flow: performs sentiment analysis on tweet, converts Tweet to a EmoTweet, passes it along
+    val flowSentiment = Flow[Tweet].map[EmoTweet]( tweet => {
+        val (emotion, score) = SentimentAnalyzer(tweet.body)
+        EmoTweet( SentiScore(emotion, score), tweet)
+    })
+
+    // Sink: Its the Final countdown!
+    val sink = Sink.foreach[EmoTweet]({
+        case EmoTweet(SentiScore(emotion, score), Tweet(author, _, body)) => {
+            println(s"@$author: $body\n$emotion:$score")
         }
-    }
+    })
 
+    source
+        .via(flowSentiment)
+        .to(sink)
+        .run()
+
+    //    openBrowser(new URI("http://localhost:9000/"))  // It works by george it works!
 }
 
 

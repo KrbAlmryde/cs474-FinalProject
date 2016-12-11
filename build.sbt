@@ -14,8 +14,10 @@ lazy val root = (project in file("."))
 
                 "org.json4s" %% "json4s-native" % "3.3.0",                                  // For Json parsing
 
-                "com.typesafe.akka" %% "akka-actor" % "2.4.11",                             // Akka actores
-                "com.typesafe.akka" %% "akka-http-experimental" % "2.4.11",                 // Akka http stuffs
+                "com.typesafe.akka" %% "akka-actor" % "2.4.8",                             // Akka actors
+                "com.typesafe.akka" %% "akka-stream" % "2.4.8",                            // Akka streams
+                "com.typesafe.akka" %% "akka-http-core" % "2.4.8",                         // Akka http stuffs
+                "com.typesafe.akka" %% "akka-http-experimental" % "2.4.8",
 
                 // Go here in the event you need more jars
                 // https://mvnrepository.com/artifact/org.twitter4j
@@ -24,7 +26,9 @@ lazy val root = (project in file("."))
                 "org.twitter4j" % "twitter4j-async" % "4.0.5",                              // Twitter4j Async API, needed for Streaming
 
                 /*             Unit Test libraries             */
-                "com.typesafe.akka" %% "akka-testkit" % "2.4.11",                           // Akka-testkit
+                "com.typesafe.akka" %% "akka-testkit" % "2.4.8",                            // Akka-testkit
+                "com.typesafe.akka" %% "akka-http-testkit" % "2.4.8",                       // Akka-testkit
+                "com.typesafe.akka" %% "akka-stream-testkit" % "2.4.11",                    // Akka-testkit
                 "org.scalactic" %% "scalactic" % "3.0.0",                                   // scalactic
                 "org.scalatest" %% "scalatest" % "3.0.0" % "test"                           // scalatest
             )

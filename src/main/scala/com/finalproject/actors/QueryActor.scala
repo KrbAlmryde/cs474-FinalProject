@@ -13,7 +13,7 @@ import scala.collection.JavaConversions._
 class QueryActor extends Actor {
 
     val twitterStream = Tweeter.Stream
-        twitterStream.addListener(new TweeterStatusListener)
+//        twitterStream.addListener(new TweeterStatusListener)
 
     def receive: Receive  = {
         case Empty =>
@@ -32,6 +32,6 @@ class QueryActor extends Actor {
             twitterStream.shutdown()
 
             // For convenience we are also restarting so we can keep playing
-            twitterStream.addListener(new TweeterStatusListener)
+//            twitterStream.addListener(new TweeterStatusListener)
     }
 }

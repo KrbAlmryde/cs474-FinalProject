@@ -1,6 +1,9 @@
 package com.finalproject
 
+import java.awt.Desktop
 import java.io.File
+import java.net.URI
+
 import scala.collection.JavaConversions._
 
 /**
@@ -64,4 +67,21 @@ package object Utils {
     }
 
 
+    /**
+      * Opens a Web-browser to the application showing the content
+      * sources: http://stackoverflow.com/questions/5226212/how-to-open-the-default-webbrowser-using-java
+      * @param uri the URL of the website, in this case localhost:9000
+      */
+    def openBrowser(uri: URI):Unit ={
+        if(Desktop.isDesktopSupported) {
+            try {
+                Desktop.getDesktop.browse(uri)
+            } catch {
+                case e:Exception =>
+                    e printStackTrace()
+                    println("There was a problem, please open a browser at http://localhost:9000/")
+            }
+
+        }
+    }
 }

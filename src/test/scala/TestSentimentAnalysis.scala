@@ -1,10 +1,13 @@
-/**
-  * Created by krbalmryde on 12/10/16.
-  */
 
 import org.scalatest._
 import com.finalproject.nlp.SentimentAnalyzer
 
+/**
+  * Created by krbalmryde on 12/10/16.
+  *
+  * See here for details about testing more fully:
+  *     https://github.com/shekhargulati/52-technologies-in-2016/blob/master/03-stanford-corenlp/README.md
+  */
 class TestSentimentAnalysis extends FunSuite with Matchers {
 
     test("\"What a wonderful night it is!\" should be positive") {

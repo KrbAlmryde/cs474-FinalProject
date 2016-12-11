@@ -19,6 +19,12 @@ import scala.io.Source
   * Take a look at this one:
   *     https://github.com/vspiewak/twitter-sentiment-analysis/blob/master/src/main/scala/com/github/vspiewak/util/SentimentAnalysisUtils.scala
   *
+  * Will need to retrain the sentiment analysis engine. Check this dataset here:
+  *     http://www.sananalytics.com/lab/twitter-sentiment
+  *
+  * See reference to this StackOverflow question:
+  *     http://stackoverflow.com/questions/25729204/bias-towards-negative-sentiments-from-stanford-corenlp
+  *     http://stackoverflow.com/questions/22586658/how-to-train-the-stanford-nlp-sentiment-analysis-tool?rq=1
   */
 object SentimentAnalyzer {
 
@@ -32,7 +38,8 @@ object SentimentAnalyzer {
     def apply(tweet:String):(Sentiment, Double) = {
         val annotations = pipeline.process(tweet)
         val sentences = annotations.get(classOf[CoreAnnotations.SentencesAnnotation]).toVector
-        val sentiment = sentences.map( sent=> sent.get(classOf[SentimentCoreAnnotations.SentimentAnnotatedTree])).map(tree => RNNCoreAnnotations.getPredictedClass(tree).toDouble)
+        val sentiment = sentences.map( sent=> sent.get(classOf[SentimentCoreAnnotations.SentimentAnnotatedTree]) )
+                                 .map( tree => RNNCoreAnnotations.getPredictedClass(tree).toDouble )
         val sizes = sentences.map(_.toString.length)
 
         // max Sentiment score

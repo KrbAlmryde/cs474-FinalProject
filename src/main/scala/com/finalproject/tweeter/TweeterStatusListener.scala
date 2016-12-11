@@ -1,36 +1,26 @@
 package com.finalproject.tweeter
 
-import akka.actor.ActorContext
-import twitter4j.{StatusListener, _}
+import twitter4j._
+import akka.actor.{ActorRef, ActorSystem}
+import com.finalproject.patterns.Messages._
+import org.reactivestreams.Publisher
 
 /**
   * Created by krbalmryde on 12/3/16.
   */
-class TweeterStatusListener extends StatusListener {
+class TweeterStatusListener(system: ActorSystem) extends StatusListener {
 
     def onStatus(status: Status): Unit = {
+        val user = status.getUser.getName
+        val timeStamp = status.getCreatedAt.getTime
+        val tweet = status.getText
 
-        println(
-            s"""
-               | @${status.getUser.getScreenName}: ${if(status.isRetweet) status.getRetweetedStatus.getText else status.getText}
-               |\t     Name: ${status.getUser.getName}
-               |\t       Id: ${status.getUser.getId}
-               |\t Location: ${status.getUser.getLocation}
-               |\tFollowers: ${status.getUser.getFollowersCount}
-               |\tUtcOffset: ${status.getUser.getUtcOffset}
-               |\t TimeZone: ${status.getUser.getTimeZone}
-               |\tCreatedAt: ${status.getUser.getCreatedAt}
-               |\t Language: ${status.getUser.getLang}
-               |\tCreatedAt: ${status.getCreatedAt}
-               |\t  Lat|Lng: ${geoLocationToString( Option(status.getGeoLocation) )}
-               |\t    Place: ${status.getPlace}
-             """.stripMargin
-        )
+        system.eventStream.publish(Tweet(user, timeStamp, tweet))
     }
 
     def onDeletionNotice(statusDeletionNotice: StatusDeletionNotice): Unit = println(s"Got a status deletion notice id: $statusDeletionNotice")
 
-    def onStallWarning(warning: StallWarning): Unit = println(s"Go stall warning: $warning")
+    def onStallWarning(warning: StallWarning): Unit = println(s"Got stall warning: $warning")
 
     def onScrubGeo(userId: Long, upToStatusId: Long): Unit = println(s"Got scrub_geo event userID: $userId upToStatusId: $upToStatusId")
 
