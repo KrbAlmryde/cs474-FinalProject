@@ -1,0 +1,31 @@
+@(query: String)
+
+@main("Tweeter Streaming") {
+
+    <h2>Live tweets</h2>
+    <h3> <span id="message"></span> </h3>
+    <h4> <span id="tweet"></span> </h4>
+
+    <script type="text/javascript" charset="utf-8">
+            let feed = new EventSource("@routes.Application.timeline(query)");
+            console.log("feed", feed);
+            feed.addEventListener('message', function(event) {
+                console.log(event);
+                let result  = JSON.parse(event.data);
+                let string = result.sentiment.emotion
+                        + ":" +result.sentiment.score
+                        + "\n\t" + result.tweet.author
+                        + "\n\t\t" + result.tweet.body
+                        ;
+                console.log(string);
+                // This is where d3 comes in...
+                if (@query.isEmpty)
+                    d3.select("#message").html("The garden hose is open! Sampling english tweets")
+                else
+                    d3.select("#message").html("Searching for Tweets containing the terms: @query")
+                d3.select("#tweet")
+                        .append('p')
+                        .html(string)
+            }, false);
+    </script>
+}

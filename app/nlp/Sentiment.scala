@@ -1,4 +1,4 @@
-package com.finalproject.nlp
+package nlp
 
 /**
   * Created by krbalmryde on 12/10/16.

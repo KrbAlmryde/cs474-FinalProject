@@ -1,13 +1,14 @@
-package com.finalproject.actors
+package actors
 
 import java.net.URI
 
 import akka.actor.Props
 import akka.stream.actor.ActorPublisher
 import akka.stream.actor.ActorPublisherMessage.{Cancel, Request}
-import com.finalproject.patterns.Messages.{ShutDown, Tweet}
-import com.finalproject.Utils.openBrowser
 
+// My library
+import controllers.openBrowser
+import patterns.Messages.{ShutDown, Tweet}
 
 /**
   * Created by krbalmryde on 12/10/16.
@@ -25,7 +26,7 @@ object TweetActor {
 }
 
 class TweetActor extends ActorPublisher[Tweet]{
-    import akka.stream.actor.ActorPublisherMessage
+
     context.system.eventStream.subscribe(self,classOf[Tweet])
 
     def receive: PartialFunction[Any, Unit] = {
@@ -40,9 +41,11 @@ class TweetActor extends ActorPublisher[Tweet]{
 
         case Cancel =>
             println(s"So....Cancel request?")
+            context.stop(self)
+            context.system.eventStream.unsubscribe(self)
 
         case x:Request => {
-            openBrowser(new URI("http://localhost:9000/"))  // It works by george it works!
+//            openBrowser(new URI("http://localhost:9000/"))  // It works by george it works!
             println(s"I got a request...uhhh what do I do with $x")
         }
     }

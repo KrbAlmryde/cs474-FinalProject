@@ -1,4 +1,4 @@
-package com.finalproject.nlp
+package nlp
 
 import Emotion._
 

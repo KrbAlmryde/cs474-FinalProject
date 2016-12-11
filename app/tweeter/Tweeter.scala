@@ -1,6 +1,6 @@
-package com.finalproject.tweeter
+package tweeter
 import akka.NotUsed
-import com.finalproject.patterns.Messages._
+import patterns.Messages._
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, OverflowStrategy}
 import akka.stream.scaladsl.{Keep, Sink, Source}
@@ -73,11 +73,10 @@ class TwitterStreamClient(system: ActorSystem) {
         stop() // call everytime we make a new query
         twitterStream.addListener(new TweeterStatusListener(system))
 
-        if (query.size > 0)
+        if (query.nonEmpty)
             twitterStream.filter( new FilterQuery().track(query) )
         else
             twitterStream.sample("en")
-
     }
 
     def stop(): Unit = {

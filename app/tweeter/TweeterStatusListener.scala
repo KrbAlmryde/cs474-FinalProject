@@ -1,8 +1,8 @@
-package com.finalproject.tweeter
+package tweeter
 
 import twitter4j._
 import akka.actor.{ActorRef, ActorSystem}
-import com.finalproject.patterns.Messages._
+import patterns.Messages._
 import org.reactivestreams.Publisher
 
 /**

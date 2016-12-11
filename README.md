@@ -21,8 +21,12 @@ Using the [Scala language](http://www.scala-lang.org/), [Akka](https://akka.io) 
 * [twitter4j](https://github.com/yusuke/twitter4j) was used to interface with the Twitter API for streaming Tweets
 
 ### How do I get set up?
-To run the application, (assuming you are using Intellij) simply execute the SBT task **'Main'**.
-
+To run the application, navigate to the root level of the project
+```
+cd kyle_mike_abhishek_finalproject/
+sbt run
+```
+Give it a minute to load then a web browser **SHOULD** open. If not, open (may I suggest Chrome?) at http://localhost:9000/ or [click here!](http://localhost:9000/) 
 
 ###Full Disclosure
 If you have a poor internet connection, you are going to have a bad time. Dont let ComCast get you down!
@@ -40,9 +44,22 @@ Joking aside, this app requires a solid internet connection in order to do its j
 
 
 #### Development Testing
-For testing purposes, I tried to keep the size of the repositories relatively small, if only to make downloading and parse etc faster. To that end the repository search string limits search results to 3000kb
+This project turned out to be particularly challenging in a large part due to the way Twitter4j handles the data streams.
+That is, it uses the Listener/Callback model for handling incoming streams from Twitter, which acts in direct conflict with 
+the Reactive Streaming model that Akka incorporates. 
 
-*Be aware, despite these measures, some of these files can get large and will take some time to parse.
+##### Generating a Source 
+To get around this, I utilized a hybrid actor model wherein I create a specially designed Actor to act as a 
+'Publisher Source'. What this means is the actor sits inside of the Callback function and emits the incoming tweets as 
+they arrive. The advantage of this approach is it let me process those tweets in whatever way I wanted to right away. 
+From that point the pipeline is pretty standard Akka streaming approach. it incorporates a largely old school 
+Listener/Callback Model which, while great in the conventional sense, proves tricky once you start trying to integrate 
+it into a reactive model something like Akka's streaming library. 
+
+##### Going with the Flow
+Once our Source is generated, it was pretty straight forward to implement the nodes within Flow Graph. For my purposes,
+I only include 1 Flow junction, which is used to perform the sentiment analysis. The benefits of doing it the way I did
+was it automagically handles backpressue from the system. 
 
 
 #### Unit Testing

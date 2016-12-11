@@ -1,15 +1,11 @@
-package com.finalproject
-
 import java.awt.Desktop
 import java.io.File
 import java.net.URI
 
-import scala.collection.JavaConversions._
-
 /**
   * Created by krbalmryde on 12/1/16.
   */
-package object Utils {
+package object controllers {
 
     // This is the United States YAHOO! Where On Earth Id
     // Used for obtaining trending tweets or hashtags
