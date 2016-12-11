@@ -10,14 +10,15 @@ lazy val root = (project in file("."))
             logBuffered in Test := false,
 
             libraryDependencies ++= Seq(
+                ws,
                 "edu.stanford.nlp" % "stanford-corenlp" % "3.5.2" artifacts (Artifact("stanford-corenlp", "models"), Artifact("stanford-corenlp")),
 
                 "org.json4s" %% "json4s-native" % "3.3.0",                                  // For Json parsing
 
-                "com.typesafe.akka" %% "akka-actor" % "2.4.8",                             // Akka actors
-                "com.typesafe.akka" %% "akka-stream" % "2.4.8",                            // Akka streams
-                "com.typesafe.akka" %% "akka-http-core" % "2.4.8",                         // Akka http stuffs
-                "com.typesafe.akka" %% "akka-http-experimental" % "2.4.8",
+//                "com.typesafe.akka" %% "akka-actor" % "2.4.8",                             // Akka actors
+//                "com.typesafe.akka" %% "akka-stream" % "2.4.8",                            // Akka streams
+//                "com.typesafe.akka" %% "akka-http-core" % "2.4.8",                         // Akka http stuffs
+//                "com.typesafe.akka" %% "akka-http-experimental" % "2.4.8",
 
                 // Go here in the event you need more jars
                 // https://mvnrepository.com/artifact/org.twitter4j
@@ -33,4 +34,4 @@ lazy val root = (project in file("."))
                 "org.scalatest" %% "scalatest" % "3.0.0" % "test"                           // scalatest
             )
         )
-
+        .enablePlugins(PlayScala)

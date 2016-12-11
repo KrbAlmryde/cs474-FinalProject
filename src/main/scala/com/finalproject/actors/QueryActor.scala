@@ -25,6 +25,7 @@ class QueryActor extends Actor {
                 new FilterQuery().track(pattern)
             )
 
+
         // This will end the current connection.
         case ShutDown =>
             twitterStream.clearListeners()

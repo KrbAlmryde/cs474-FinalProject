@@ -70,12 +70,14 @@ class TwitterStreamClient(system: ActorSystem) {
     val twitterStream:TwitterStream = new TwitterStreamFactory(TweeterConfig.build).getInstance
 
     def listenAndStream(query:String): Unit = {
-
         stop() // call everytime we make a new query
         twitterStream.addListener(new TweeterStatusListener(system))
-        twitterStream.filter(
-            new FilterQuery().track(query)
-        )
+
+        if (query.size > 0)
+            twitterStream.filter( new FilterQuery().track(query) )
+        else
+            twitterStream.sample("en")
+
     }
 
     def stop(): Unit = {
