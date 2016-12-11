@@ -45,7 +45,6 @@ class TweetActor extends ActorPublisher[Tweet]{
             context.system.eventStream.unsubscribe(self)
 
         case x:Request => {
-//            openBrowser(new URI("http://localhost:9000/"))  // It works by george it works!
             println(s"I got a request...uhhh what do I do with $x")
         }
     }

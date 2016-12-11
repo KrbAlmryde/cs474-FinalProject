@@ -62,6 +62,10 @@ I only include 1 Flow junction, which is used to perform the sentiment analysis.
 was it automagically handles backpressue from the system. 
 
 
+##### Towards the Data Visualization
+The go-to for web-based Data visualization is without a doubt [D3](). 
+I also took some help from a REALLY nice library that setup the pretty chart for me. [RealTimeChartMulti](https://bl.ocks.org/boeric/6a83de20f780b42fadb9)
+
 #### Unit Testing
 For Unit-testing I utilized Akka's Actor Testkit[ScalaTest](http://www.scalatest.orge) using the [FunSuite](http://doc.scalatest.org/3.0.0/#org.scalatest.FunSuite). Its fun and was surprisingly simple to get it up and running. The Akka Testkit was no walk in the park though, so forgive the stupid simple tests.
 

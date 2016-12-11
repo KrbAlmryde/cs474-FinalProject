@@ -4,28 +4,31 @@
 
     <h2>Live tweets</h2>
     <h3> <span id="message"></span> </h3>
+    <div id="vizGraph"></div>
     <h4> <span id="tweet"></span> </h4>
 
     <script type="text/javascript" charset="utf-8">
-            let feed = new EventSource("@routes.Application.timeline(query)");
-            console.log("feed", feed);
-            feed.addEventListener('message', function(event) {
-                console.log(event);
-                let result  = JSON.parse(event.data);
-                let string = result.sentiment.emotion
-                        + ":" +result.sentiment.score
-                        + "\n\t" + result.tweet.author
-                        + "\n\t\t" + result.tweet.body
-                        ;
-                console.log(string);
-                // This is where d3 comes in...
-                if (@query.isEmpty)
-                    d3.select("#message").html("The garden hose is open! Sampling english tweets")
-                else
-                    d3.select("#message").html("Searching for Tweets containing the terms: @query")
-                d3.select("#tweet")
-                        .append('p')
-                        .html(string)
-            }, false);
+        if (@query.isEmpty)
+            d3.select("#message").html("The garden hose is open! Sampling english tweets")
+        else
+            d3.select("#message").html("Searching for Tweets containing the terms: @query")
+
+        // This occurs at start and only once
+        const tick = SenitmentGraph()
+        // Meaning, we can change the query sting internally via a button..I think...
+        let feed= ActivateEventSource("@routes.Application.timeline(query)", tick)
+
+        @*let feed = new EventSource("@routes.Application.timeline(query)");*@
+        @*feed.addEventListener('message', HandleStream(tick), false);*@
+        @*feed.removeEventListener('message',HandleStream(tick), false);*@
+
+
+        function ActivateEventSource(queryRoute, callback) {
+            console.log("we called", queryRoute)
+            let feed = new EventSource(queryRoute);
+            feed.addEventListener('message', HandleStream(callback), false);
+            return feed
+        }
+
     </script>
 }

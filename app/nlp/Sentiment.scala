@@ -2,6 +2,7 @@ package nlp
 
 /**
   * Created by krbalmryde on 12/10/16.
+  *
   */
 
 sealed trait Sentiment
