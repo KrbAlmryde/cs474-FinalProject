@@ -77,7 +77,7 @@ To run the tests, in Intellij simplly select the **SBT** task "Test" and youll b
 ## Discussion:
 ### How to tell something is happening
 
-### Actor Model
+### Streaming Model
 I designed the Actor Model in the following way. The basic idea here is that each
 step in the pipeline is controlled by and actor. Actions like Invoking the Github
 API or generating the Patch and Understand Dependency graph each got their own actor.

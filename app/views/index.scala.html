@@ -5,6 +5,7 @@
     <h2>Live tweets</h2>
     <h3> <span id="message"></span> </h3>
     <div id="vizGraph"></div>
+    <div id="search"></div>
     <h4> <span id="tweet"></span> </h4>
 
     <script type="text/javascript" charset="utf-8">
@@ -18,10 +19,6 @@
         // Meaning, we can change the query sting internally via a button..I think...
         let feed= ActivateEventSource("@routes.Application.timeline(query)", tick)
 
-        @*let feed = new EventSource("@routes.Application.timeline(query)");*@
-        @*feed.addEventListener('message', HandleStream(tick), false);*@
-        @*feed.removeEventListener('message',HandleStream(tick), false);*@
-
 
         function ActivateEventSource(queryRoute, callback) {
             console.log("we called", queryRoute)
@@ -29,6 +26,48 @@
             feed.addEventListener('message', HandleStream(callback), false);
             return feed
         }
+/*
+        function onCreate() {
+            // This occurs at start and only once
+            let tick = SenitmentGraph()
+            // Meaning, we can change the query sting internally via a button..I think...
+            let feed= ActivateEventSource(@query, tick)
 
+            d3.select('#search')
+              .append('button')
+                .text('search')
+                .on('click', () => {
+                    // Kill off the old chart
+                    d3.select('#chartDiv').remove()
+
+                    // Create a New Chart
+                    tick = SenitmentGraph()
+
+                    // Grab the text from the search box
+                    let text = d3.select("#searchMe").node().value;
+                    console.log(text, @query)
+                    // Close the feed
+                    feed.close()
+
+                    // Reopen the feed, assign the chart to the listener
+                    feed = ActivateEventSource(@query, tick)
+                });
+
+            d3.select('#search').append('input').attr('type','text').attr('id', 'searchMe')
+
+        }
+
+        function ActivateEventSource2(queryPattern, callback) {
+            if (queryPattern.isEmpty)
+                d3.select("#message").html("The garden hose is open! Sampling english tweets");
+            else
+                d3.select("#message").html("Searching for Tweets containing the terms:", queryPattern);
+
+            console.log("we called", queryPattern)
+            let feed = new EventSource("@routes.Application.timeline(query)");
+            feed.addEventListener('message', HandleStream(callback), false);
+            return feed
+        }
+*/
     </script>
 }

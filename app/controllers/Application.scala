@@ -44,6 +44,7 @@ class Application @Inject() (implicit system: ActorSystem, mat: Materializer, ec
 
     // This is a http/route method.
     def timeline(query:String): Action[AnyContent] = Action {
+        println("our Query is "+ query)
         twitterStream.listenAndStream(query)
 
         // Secretly we are creating an Actor here, his name is jeff. We like jeff because he gives us the twitter stream
@@ -51,6 +52,7 @@ class Application @Inject() (implicit system: ActorSystem, mat: Materializer, ec
 
         Ok.chunked(source via GraphNodes.flowSentiment via GraphNodes.flowJson via EventSource.flow)
     }
+
 
 }
 
