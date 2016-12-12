@@ -32,7 +32,6 @@ import tweeter.TwitterStreamClient
 @Singleton
 class Application @Inject() (implicit system: ActorSystem, mat: Materializer, ec: ExecutionContext) extends Controller {
 
-    var actorRef:ActorRef = ActorRef.noSender
     val twitterStream = new TwitterStreamClient(system)
     SentimentAnalyzer("init") // do this once to initialize the annotator
     openBrowser(new URI("http://localhost:9000/"))  // It works by george it works!

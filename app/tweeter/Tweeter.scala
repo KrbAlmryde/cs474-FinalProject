@@ -16,32 +16,6 @@ import twitter4j._
   *
   * Generates a Twitter or TwitterStream object
   */
-object Tweeter {
-
-    /**
-      * Relevant twitter authetification information.
-      * Please dont steal it.
-      */
-    val consumerKey = "5B73c5z6nLwGtWWTIqdieTAPC"
-    val consumerSecret = "LMyBlcTmSdz7iTbcug3A7R5KVQxaCK7PeO2HrkQbFUCriz6Amp"
-    val accessToken = "326827611-Ds6Kas4XDgN40FjJvMfHtdIV7tlRrsVPYdzRtfzW"
-    val accessTokenSecret = "El9NWfPj2OknPSZRZALMnmhqwDKpemkyfyzf9WSeUgO3Q"
-
-    // Returns a fully qualified TwitterStream object, ready to use and operate
-    def Stream: TwitterStream = new TwitterStreamFactory( getConfig.build ).getInstance()
-
-    // Returns a fully qualified Twitter object, ready to use and operate
-    def Tweeter: Twitter = new TwitterFactory( getConfig.build ).getInstance()
-
-    // Returns a configuration Builder object. Should be private
-    def getConfig:ConfigurationBuilder = {
-        new ConfigurationBuilder()
-                .setOAuthConsumerKey(consumerKey)
-                .setOAuthConsumerSecret(consumerSecret)
-                .setOAuthAccessToken(accessToken)
-                .setOAuthAccessTokenSecret(accessTokenSecret)
-    }
-}
 
 object TweeterConfig {
     /**

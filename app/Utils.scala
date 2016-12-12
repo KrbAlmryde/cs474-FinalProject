@@ -11,7 +11,6 @@ package object controllers {
     // Used for obtaining trending tweets or hashtags
     val USWOEID = 23424977
 
-
     val instructions =
         s"""
            |${Console.YELLOW}
