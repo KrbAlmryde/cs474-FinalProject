@@ -30,8 +30,8 @@ function DataConverter(result) {
         time: new Date(),
         type:"circle",
         opacity: 0.8,
-        size: Math.abs(sizeFunc(result.sentiment.score)),
-        color: colorFunc(result.sentiment.score)
+        size: Math.abs(sizeFunc(+result.sentiment.score)),
+        color: colorFunc(+result.sentiment.score)
     }
 }
 

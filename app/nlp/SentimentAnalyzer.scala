@@ -62,10 +62,10 @@ object SentimentAnalyzer {
     def classify(score:Double): Sentiment = {
         score match {
             case s if s < -5.0 => UNKNOWN
-            case s if s < -4.0 => VERY_NEGATIVE
-            case s if s < -2.0 => NEGATIVE
-            case s if s >= -2.0 && s <= 2.0 => NEUTRAL
-            case s if s > 2.0 => POSITIVE
+            case s if s < -3.0 => VERY_NEGATIVE
+            case s if s < -1.0 => NEGATIVE
+            case s if s >= -1.0 && s <= 1.0 => NEUTRAL
+            case s if s > 1.0 => POSITIVE
             case s if s > 3.0 => VERY_POSITIVE
             case s if s > 5.0 => UNKNOWN
         }
